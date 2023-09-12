@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./logo.ong" alt="Logo Sentinel">
+  <img src="./logo.png" alt="Logo Sentinel">
 </div>
 
 
