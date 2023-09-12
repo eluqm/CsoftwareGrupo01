@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="rRoWfzJFK4uJXbPDyryT" name="Page-1">
-        <mxGraphModel dx="333" dy="342" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="396" dy="348" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -32,6 +32,9 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" style="edgeStyle=none;html=1;endArrow=none;endFill=0;fontSize=10;" parent="1" source="4" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="153" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="4" target="152">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="4" value="DangerArea" style="whiteSpace=wrap;html=1;align=center;fontSize=10;" parent="1" vertex="1">
@@ -103,7 +106,7 @@
                 <mxCell id="126" style="edgeStyle=none;html=1;fontSize=10;endArrow=none;endFill=0;" parent="1" source="11" target="123" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="151" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="11" target="150">
+                <mxCell id="151" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" parent="1" source="11" target="150" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="11" value="Criminal" style="whiteSpace=wrap;html=1;align=center;fontSize=10;" parent="1" vertex="1">
@@ -372,7 +375,7 @@
                     <mxGeometry x="1440" y="155" width="80" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="122" value="ID" style="ellipse;whiteSpace=wrap;html=1;align=center;fontStyle=4;fontSize=10;" parent="1" vertex="1">
-                    <mxGeometry x="1320" y="80" width="80" height="30" as="geometry"/>
+                    <mxGeometry x="1270" y="80" width="80" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="123" value="Description" style="ellipse;whiteSpace=wrap;html=1;align=center;fontSize=10;" parent="1" vertex="1">
                     <mxGeometry x="1200" y="155" width="80" height="30" as="geometry"/>
@@ -425,8 +428,11 @@
                 <mxCell id="149" value="N:M" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="1" vertex="1">
                     <mxGeometry x="1260" y="275" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="150" value="Photo" style="ellipse;whiteSpace=wrap;html=1;align=center;fontSize=10;" vertex="1" parent="1">
-                    <mxGeometry x="1440" y="90" width="80" height="30" as="geometry"/>
+                <mxCell id="150" value="Photo" style="ellipse;whiteSpace=wrap;html=1;align=center;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1370" y="80" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="Latitude" style="ellipse;whiteSpace=wrap;html=1;align=center;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="1440" y="870" width="80" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
