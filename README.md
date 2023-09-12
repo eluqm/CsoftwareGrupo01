@@ -52,6 +52,8 @@ Sentinel is a web application designed to improve personal and community safety.
 
 # Documentation
 
+The following diagrams are based on the **functional requirements** [functional requirements](./Documentation/FunctionalRequirements.md).
+
 ## Entity–Relationship Model
 <div align="center">
   <img src="./Documentation/UML/ERM/ERM.jpg" alt="">
