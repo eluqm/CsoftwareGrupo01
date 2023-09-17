@@ -1,25 +1,38 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React , { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import TabNavigation from './App/Navigations/TabNavigation';
 import Color from './App/Shared/Color';
+import * as Location from 'expo-location';
+import { UserLocationContext } from './App/Context/UserLocationContext';
 
 export default function App() {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log(location);
+    })();
+  }, []);
+
   return (
     <View style = {styles.container}>
-      <Image
-        style = {{width: 100, height: 100}}
-        source={require('./assets/logo.png')}
-      />
-      <Text style = {styles.text}>Sentinel Guard</Text>
-
-      <StatusBar style="auto" />
-      
-      <NavigationContainer>
-        <TabNavigation/>
-      </NavigationContainer>
-
+      <UserLocationContext.Provider value = {{ location, setLocation }}>
+        <NavigationContainer>
+          <TabNavigation/>
+        </NavigationContainer>
+      </UserLocationContext.Provider>
     </View>
   );
 }
@@ -28,10 +41,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.black,
-    paddingTop:20
-  },
-  text: {
-    color: '#fff',
-    fontSize: 50,
+    paddingTop: 0
   },
 });
