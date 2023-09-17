@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Image, TextInput, Dimensions } from 'react-native'
 import React from 'react'
 
 export default function Header() {
@@ -6,7 +6,7 @@ export default function Header() {
         <View style = {{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', gap: 10,
             alignItems: 'center' }}>
 
-            <Image source={require('./../../../assets/Logo.png')}
+            <Image source={require('./../../../assets/logo.png')}
                 style = { styles.logo }
             />
 
@@ -21,10 +21,10 @@ export default function Header() {
             />
 
         </View>
-    )
-}
+    );
+};
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
     logo: {
         width: 50,
         height: 50
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         padding: 4,
         borderRadius: 50,
         paddingLeft: 10,
-        width: Dimensions.get('screen').width * .6
+        width: Dimensions.get('screen').width * 0.6
     },
     userImage: {
         width: 50,
