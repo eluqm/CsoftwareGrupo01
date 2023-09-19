@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "214491450274",
+    "project_id": "sentinel-b60c0",
+    "storage_bucket": "sentinel-b60c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214491450274:android:4451301851c864c1bc80fb",
+        "android_client_info": {
+          "package_name": "com.daoblur.Sentinel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB348kBOS200do7i0ha6XPX9Zo5GskQCHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

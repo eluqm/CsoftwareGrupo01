@@ -19,12 +19,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "googleServicesFile": "./google-services.json",
-        "package": "com.daoblur.Sentinel",
-        "googleMapsApiKey": "AIzaSyA_Vpdjo0SdI-cHrISpAhnlmiSoP_tvMKg"
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.daoblur.Sentinel"
     },
     "web": {
