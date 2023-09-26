@@ -16,7 +16,8 @@ CREATE TABLE "Country" (
 
 CREATE TABLE "Region" (
 	Id int NOT NULL PRIMARY KEY,
-	Name varchar(30) NOT NULL
+	Name varchar(30) NOT null,
+	IdCountry int not null references "Country"
 );
 
 CREATE TABLE "District" (
@@ -24,7 +25,8 @@ CREATE TABLE "District" (
 	Name varchar(30) NOT NULL,
 	Latitude numeric(25,20) not null,
 	Longitude numeric(25,20) not null,
-	Rating numeric(3, 2) NOT NULL
+	Rating numeric(3, 2) NOT null,
+	IdRegion int not null references "Region"
 );
 
 CREATE TABLE "DistrictCoordinate" (
@@ -49,7 +51,8 @@ CREATE TABLE "Station" (
 	Id int NOT NULL PRIMARY KEY,
 	"type" int NOT NULL REFERENCES "StationType",
 	Latitude numeric(25,20) not null,
-	Longitude numeric(25,20) not null
+	Longitude numeric(25,20) not null,
+	IdDistrict int not null references "District"
 );
 
 CREATE TABLE "Street" (
@@ -64,9 +67,21 @@ CREATE TABLE "StreetCoordinate" (
 	PRIMARY KEY (StreetId, CoordinateId)
 );
 
+CREATE TABLE "DistrictStreet" (
+	DistrictId int NOT NULL REFERENCES "District",
+	StreetId int NOT NULL REFERENCES "Street",
+	PRIMARY KEY (DistrictId, StreetId)
+);
+
 CREATE TABLE "DangerArea" (
 	Id int NOT NULL PRIMARY KEY,
 	Radius int NOT NULL,
 	Latitude numeric(25,20) not null,
 	Longitude numeric(25,20) not null
+);
+
+CREATE TABLE "DistrictDangerArea" (
+	DistrictId int NOT NULL REFERENCES "District",
+	DangerAreaId int NOT NULL REFERENCES "DangerArea",
+	PRIMARY KEY (DistrictId, DangerAreaId)
 );

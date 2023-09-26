@@ -13,8 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<Supabase.Client> (_ =>
-    new Supabase.Client(
+await Sentinel.SupabaseClient.Init();
+
+/*
+builder.Services.AddScoped<Client> (_ =>
+    new Client(
         //builder.Configuration["SupabaseUrl"],
         "https://rfsfwgrnymzqyzshgmyh.supabase.co",
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmc2Z3Z3JueW16cXl6c2hnbXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTU2NTA3OTIsImV4cCI6MjAxMTIyNjc5Mn0.UHq26m0rsjL8OwPh0II-kyLsaDc1IMIwoWNAETgA0KI",
@@ -25,7 +28,7 @@ builder.Services.AddScoped<Supabase.Client> (_ =>
         }
     )
 );
-
+*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,8 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//
-
+/*
 app.MapPost("/Coordinate", async ( CreateCoordinateRequest request, Client client) => {
     var newsletter = new Coordinate
     {
@@ -67,7 +69,7 @@ app.MapGet("/Coordinate/{id}", async (long id, Client client) => {
 
     return Results.Ok(coordinateResponse);
 });
-
+*/
 /*
 app.MapDelete("/newsletters/{id}", async (long id, Client client) => {
     await client
