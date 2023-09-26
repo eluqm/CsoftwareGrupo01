@@ -1,20 +1,30 @@
 CREATE TABLE "User" (
 	Id int NOT NULL PRIMARY key,
-	NickName varchar(50) NOT NULL
+	UserName varchar(50) NOT NULL
 );
 
 CREATE TABLE "Coordinate" (
 	Id int NOT NULL PRIMARY key,
-	Latitude double NOT NULL,
-	Longitude double NOT NULL
+	Latitude numeric(25,20) not null,
+	Longitude numeric(25,20) not null
+);
+
+CREATE TABLE "Country" (
+	Id int NOT NULL PRIMARY KEY,
+	Name varchar(30) NOT NULL
+);
+
+CREATE TABLE "Region" (
+	Id int NOT NULL PRIMARY KEY,
+	Name varchar(30) NOT NULL
 );
 
 CREATE TABLE "District" (
 	Id int NOT NULL PRIMARY KEY,
 	Name varchar(30) NOT NULL,
-	Latitude double NOT NULL,
-	Longitude double NOT NULL,
-	Rating double NOT NULL
+	Latitude numeric(25,20) not null,
+	Longitude numeric(25,20) not null,
+	Rating numeric(3, 2) NOT NULL
 );
 
 CREATE TABLE "DistrictCoordinate" (
@@ -26,6 +36,37 @@ CREATE TABLE "DistrictCoordinate" (
 CREATE TABLE "DistrictRating" (
 	UserId int NOT NULL REFERENCES "User",
 	DistrictId int NOT NULL REFERENCES "District",
-	Value double NOT NULL,
+	Value numeric(3, 2) NOT NULL,
 	PRIMARY KEY (UserId, DistrictId)
+);
+
+CREATE TABLE "StationType" (
+	Id int NOT NULL PRIMARY KEY,
+	Name varchar(20) NOT NULL
+);
+
+CREATE TABLE "Station" (
+	Id int NOT NULL PRIMARY KEY,
+	"type" int NOT NULL REFERENCES "StationType",
+	Latitude numeric(25,20) not null,
+	Longitude numeric(25,20) not null
+);
+
+CREATE TABLE "Street" (
+	Id int NOT NULL PRIMARY KEY,
+	Name varchar(30) NOT NULL,
+	"security" boolean NOT null
+);
+
+CREATE TABLE "StreetCoordinate" (
+	StreetId int NOT NULL REFERENCES "Street",
+	CoordinateId int NOT NULL REFERENCES "Coordinate",
+	PRIMARY KEY (StreetId, CoordinateId)
+);
+
+CREATE TABLE "DangerArea" (
+	Id int NOT NULL PRIMARY KEY,
+	Radius int NOT NULL,
+	Latitude numeric(25,20) not null,
+	Longitude numeric(25,20) not null
 );
