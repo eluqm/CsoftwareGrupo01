@@ -85,3 +85,13 @@ select * from "DistrictCoordinate";
 
 insert into "DangerArea" values (nextval('SeqDangerArea'), 100, -16.399214583999957, -71.50476168354827);
 select * from "DangerArea";
+
+--------------------------------
+
+insert into "DangerArea" values (nextval('SeqDangerArea'), 150, -16.396650372072514, -71.50816061572375);
+insert into "DangerArea" values (nextval('SeqDangerArea'), 100, -16.408660388110356, -71.50743358484424);
+insert into "DangerArea" values (nextval('SeqDangerArea'), 200, -16.399971998749955, -71.49661907032058);
+
+--------------------------------
+
+
