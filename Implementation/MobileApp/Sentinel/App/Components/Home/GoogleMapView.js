@@ -3,6 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker } from 'react-native-maps';
 import Color from '../../Shared/Color';
 import { UserLocationContext } from '../../Context/UserLocationContext';
+import "react-native-url-polyfill/auto"
+import { Supabase } from '../../../lib/Supabase';
+
 
 export default function GoogleMapView() {
     const coordinates = { latitude: -16.396623642472864,  longitude: -71.5079767411299 };
@@ -18,8 +21,6 @@ export default function GoogleMapView() {
         { latitude: -16.398846665850336, longitude: -71.50447604043674 }
     ];
 
-    // 
-
     //------------------
 
     const [mapRegion, setMapRegion] = useState([]);
@@ -31,15 +32,15 @@ export default function GoogleMapView() {
     useEffect(() => {
         if(location) {
             setMapRegion({
-                latitude: location.coords.latitude - 0.002,
-                longitude: location.coords.longitude - 0.002,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.005
             });
 
             setMyLocation({
-                latitude: location.coords.latitude - 0.002,
-                longitude: location.coords.longitude - 0.002,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
             });
         }
         else {
@@ -51,7 +52,45 @@ export default function GoogleMapView() {
     }, [location]);
     
     console.log('aea', myLocation);
+
+    //SUPABASE
     
+    const [ posts, setPosts ] = useState([]);
+
+    const [ DangerAreas, setDangerAreas ] = useState([]);
+
+    const GetCoords = async () => {
+        let { data, error } = await Supabase
+        .from('Coordinate')
+        .select('latitude, longitude')
+
+        return data;
+    }
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const { data, error } = await Supabase.from('Coordinate').select('*');
+            if(error) console.log(error);
+            else setPosts(data);
+        };
+        fetchPosts();
+        
+        //GetCoords().then((data) => setPosts(data))
+    }, []);
+
+    useEffect(() => {
+        const fetchDangerAreas = async () => {
+            const { data, error } = await Supabase.from('DangerArea').select('*');
+            if(error) console.log(error);
+            else setDangerAreas(data);
+        };
+
+        fetchDangerAreas();
+        
+    }, []);
+    
+    console.log(posts);
+
     return (
         <View>
             <MapView 
@@ -72,34 +111,30 @@ export default function GoogleMapView() {
                     <Image source = { require('./../../../assets/security.png') } style = {{ height: 30, width:30 }} />
                 </Marker>
 
-                <Circle
-                    center = { myLocation }
-                    radius = { 15 }
-                    strokeColor = { '#3B85FC' }
-                    fillColor = "rgba(59, 133, 252, 0.25)"
-                    strokeWidth = { 1 }
-                />
-
-                <Circle
-                    center = { myLocation }
-                    radius = { 5 }
-                    strokeColor = { '#3B85FC' }
-                    fillColor = "rgba(59, 133, 252, 1)"
-                    strokeWidth = { 1 }
-                />
-
-                <Circle
-                    center = { coordinates }
-                    radius = { radius }
-                    strokeColor = { Color.red }
-                    fillColor = "rgba(255, 0, 0, 0.25)"
-                    strokeWidth = { 1 }
-                />
+                {
+                    DangerAreas.map((dangerArea) => (
+                        <Circle
+                            center = {{ latitude: dangerArea.latitude, longitude: dangerArea.longitude }}
+                            radius = { dangerArea.radius }
+                            strokeColor = { Color.red }
+                            fillColor = "rgba(255, 0, 0, 0.25)"
+                            strokeWidth = { 1 }
+                            key = { dangerArea.id }
+                        />
+                    ))
+                }
 
                 <Polyline
                     coordinates = { coordinates2 }
                     strokeColor = { Color.red }
                     strokeWidth = { 5 }
+                />
+
+                <Polyline
+                    coordinates = { posts }
+                    strokeColor = "#FF5500"
+                    strokeWidth = { 3 } 
+                    lineDashPattern = { [0,0] }
                 />
             </MapView>
         </View>
