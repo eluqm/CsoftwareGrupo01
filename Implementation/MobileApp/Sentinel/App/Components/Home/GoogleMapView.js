@@ -5,9 +5,28 @@ import Color from '../../Shared/Color';
 import { UserLocationContext } from '../../Context/UserLocationContext';
 import "react-native-url-polyfill/auto"
 import { Supabase } from '../../../lib/Supabase';
-
+//import Sound from 'react-native-sound';
+import { Audio } from 'expo-av'
 
 export default function GoogleMapView() {
+
+    useEffect(() => {
+        const playSound = async () => {
+          const soundObject = new Audio.Sound();
+          try {
+            await soundObject.loadAsync(require('./../../../assets/emergency-alarm.mp3'));
+            await soundObject.playAsync();
+            // Your sound is playing!
+          } catch (error) {
+            // An error occurred!
+          }
+        };
+    
+        playSound();
+      }, []);
+
+
+
     const coordinates = { latitude: -16.396623642472864,  longitude: -71.5079767411299 };
     var radius = 200;
 
@@ -22,7 +41,15 @@ export default function GoogleMapView() {
     ];
 
     //------------------
+/*
+    var Sound = require('react-native-sound');
 
+    sound = new Sound('./../../../assets/emergency-alarm.mp3');
+
+    playSound = () => {
+        this.sound.play();
+    }
+*/
     const [mapRegion, setMapRegion] = useState([]);
     
     const [myLocation, setMyLocation] = useState([]);
@@ -30,6 +57,7 @@ export default function GoogleMapView() {
     const {location, setLocation} = useContext(UserLocationContext);
 
     useEffect(() => {
+        //playSound();
         if(location) {
             setMapRegion({
                 latitude: location.coords.latitude,
