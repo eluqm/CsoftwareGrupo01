@@ -8,24 +8,67 @@ import { Supabase } from '../../../lib/Supabase';
 //import Sound from 'react-native-sound';
 import { Audio } from 'expo-av'
 
-export default function GoogleMapView() {
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+    console.log('--- ', lat1, lon1, lat2, lon2);
+    const radioTierraKm = 6371; // Radio de la Tierra en kilómetros
 
+    // Convierte las coordenadas de grados a radianes
+    const lat1Rad = (lat1 * Math.PI) / 180;
+    const lon1Rad = (lon1 * Math.PI) / 180;
+    const lat2Rad = (lat2 * Math.PI) / 180;
+    const lon2Rad = (lon2 * Math.PI) / 180;
+
+    // Diferencia entre las longitudes y latitudes
+    const dLat = lat2Rad - lat1Rad;
+    const dLon = lon2Rad - lon1Rad;
+
+    // Fórmula de la distancia haversine
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Distancia en kilómetros
+    const distancia = radioTierraKm * c;
+
+    return distancia;
+}
+
+
+export default function GoogleMapView() {
+    //const PlayAlert = () => { };
+/*
     useEffect(() => {
         const playSound = async () => {
-          const soundObject = new Audio.Sound();
-          try {
-            await soundObject.loadAsync(require('./../../../assets/emergency-alarm.mp3'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-          } catch (error) {
-            // An error occurred!
-          }
+            const soundObject = new Audio.Sound();
+            try {
+                await soundObject.loadAsync(require('./../../../assets/emergency-alarm.mp3'));
+                await soundObject.playAsync();
+                // Your sound is playing!
+            } 
+            catch (error) {
+                // An error occurred!
+            }
         };
-    
         playSound();
-      }, []);
+    }, []);
 
+*/
+    const [sound, setSound] = React.useState();
+    async function playSound() {
+        const { sound } = await Audio.Sound.createAsync(require('./../../../assets/emergency-alarm.mp3'));
+        setSound(sound);
+        await sound.playAsync();
+    }
 
+    React.useEffect(() => {
+        return sound? () => {
+            sound.unloadAsync();
+        } : undefined;
+    }, [sound]);
+
+    //playSound();
 
     const coordinates = { latitude: -16.396623642472864,  longitude: -71.5079767411299 };
     var radius = 200;
@@ -78,8 +121,6 @@ export default function GoogleMapView() {
             });
         }
     }, [location]);
-    
-    console.log('aea', myLocation);
 
     //SUPABASE
     
@@ -105,19 +146,39 @@ export default function GoogleMapView() {
         
         //GetCoords().then((data) => setPosts(data))
     }, []);
-
+var i = 0;
     useEffect(() => {
         const fetchDangerAreas = async () => {
+            
             const { data, error } = await Supabase.from('DangerArea').select('*');
             if(error) console.log(error);
-            else setDangerAreas(data);
-        };
+            else {
+                setDangerAreas(data);
+                console.log('data:: ', data[i]);
+                data.map((dangerarea) => {
+                    var distance = calcularDistancia(dangerarea.latitude, dangerarea.longitude,-16.39778798960131, -71.50403175029082);
+                
+                console.log('distance: ',distance*1000 + dangerarea.radius);
 
+                if (distance*1000 + dangerarea.radius <= 1000) {
+                    console.log("El usuario está dentro del círculo ampliado.");
+                    playSound();
+                } 
+                else {
+                    console.log("El usuario está fuera del círculo ampliado.");
+                    //playSound();
+                }
+            })
+                
+                
+            }
+        };
+        //playSound();
         fetchDangerAreas();
         
     }, []);
     
-    console.log(posts);
+    //console.log(posts);
 
     return (
         <View>
