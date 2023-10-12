@@ -85,3 +85,49 @@ CREATE TABLE "DistrictDangerArea" (
 	DangerAreaId int NOT NULL REFERENCES "DangerArea",
 	PRIMARY KEY (DistrictId, DangerAreaId)
 );
+
+CREATE TABLE "Incident" (
+	Id int NOT NULL PRIMARY KEY,
+	"description" text,
+	Latitude numeric(25,20) not null,
+	Longitude numeric(25,20) not null,
+	"date" date not null
+);
+
+CREATE TABLE "DistrictIncident" (
+	DistrictId int NOT NULL REFERENCES "District",
+	IncidentId int NOT NULL REFERENCES "Incident",
+	PRIMARY KEY (DistrictId, IncidentId)
+);
+
+CREATE TABLE "Criminal" (
+	Id int NOT NULL PRIMARY KEY,
+	"description" text not null,
+	"name" varchar(50) NOT NULL,
+	"photo" text not null
+);
+
+CREATE TABLE "IncidentCriminal" (
+	IncidentId int NOT NULL REFERENCES "Incident",
+	CriminalId int NOT NULL REFERENCES "Criminal",
+	PRIMARY KEY (IncidentId, CriminalId)
+);
+
+CREATE TABLE "Comment" (
+	Id int NOT NULL PRIMARY KEY,
+	"content" text not null,
+	"date" date not null,
+	UserId int not null references "User"
+);
+
+CREATE TABLE "DistrictComment" (
+	DistrictId int NOT NULL REFERENCES "District",
+	CommentId int NOT NULL REFERENCES "Comment",
+	PRIMARY KEY (DistrictId, CommentId)
+);
+
+CREATE TABLE "DangerAreaComment" (
+	DangerAreaId int NOT NULL REFERENCES "DangerArea",
+	CommentId int NOT NULL REFERENCES "Comment",
+	PRIMARY KEY (DangerAreaId, CommentId)
+);

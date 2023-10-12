@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="ER-Diagram.erd">
+	<entities>
+		<data-source id="postgres-jdbc-18aade636b7-4445952c28413ba2">
+			<entity id="1" name="Comment" fq-name="public.&quot;Comment&quot;" order="0" x="572" y="116">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="2" name="Coordinate" fq-name="public.&quot;Coordinate&quot;" order="1" x="235" y="896">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="3" name="Country" fq-name="public.&quot;Country&quot;" order="2" x="191" y="447">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="4" name="Criminal" fq-name="public.&quot;Criminal&quot;" order="3" x="245" y="1036">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="5" name="DangerArea" fq-name="public.&quot;DangerArea&quot;" order="4" x="150" y="216">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="6" name="DangerAreaComment" fq-name="public.&quot;DangerAreaComment&quot;" order="5" x="338" y="135">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="7" name="District" fq-name="public.&quot;District&quot;" order="6" x="742" y="569">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="8" name="DistrictComment" fq-name="public.&quot;DistrictComment&quot;" order="7" x="559" y="313">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="9" name="DistrictCoordinate" fq-name="public.&quot;DistrictCoordinate&quot;" order="8" x="415" y="901">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="10" name="DistrictDangerArea" fq-name="public.&quot;DistrictDangerArea&quot;" order="9" x="340" y="311">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="11" name="DistrictIncident" fq-name="public.&quot;DistrictIncident&quot;" order="10" x="726" y="798">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="12" name="DistrictRating" fq-name="public.&quot;DistrictRating&quot;" order="11" x="734" y="394">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="13" name="DistrictStreet" fq-name="public.&quot;DistrictStreet&quot;" order="12" x="431" y="717">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="14" name="Incident" fq-name="public.&quot;Incident&quot;" order="13" x="725" y="1017">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="15" name="IncidentCriminal" fq-name="public.&quot;IncidentCriminal&quot;" order="14" x="471" y="1048">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="16" name="Region" fq-name="public.&quot;Region&quot;" order="15" x="345" y="435">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="17" name="Station" fq-name="public.&quot;Station&quot;" order="16" x="354" y="563">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="18" name="StationType" fq-name="public.&quot;StationType&quot;" order="17" x="178" y="594">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="19" name="Street" fq-name="public.&quot;Street&quot;" order="18" x="236" y="715">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="20" name="StreetCoordinate" fq-name="public.&quot;StreetCoordinate&quot;" order="19" x="53" y="811">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+			<entity id="21" name="User" fq-name="public.&quot;User&quot;" order="20" x="737" y="234">
+				<path name="public"/>
+				<path name="sentinel"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations>
+		<relation name="DangerAreaComment_commentid_fkey" fq-name="public.&quot;DangerAreaComment&quot;.&quot;DangerAreaComment_commentid_fkey&quot;" type="fk" pk-ref="1" fk-ref="6"/>
+		<relation name="DistrictComment_commentid_fkey" fq-name="public.&quot;DistrictComment&quot;.&quot;DistrictComment_commentid_fkey&quot;" type="fk" pk-ref="1" fk-ref="8"/>
+		<relation name="DistrictCoordinate_coordinateid_fkey" fq-name="public.&quot;DistrictCoordinate&quot;.&quot;DistrictCoordinate_coordinateid_fkey&quot;" type="fk" pk-ref="2" fk-ref="9"/>
+		<relation name="StreetCoordinate_coordinateid_fkey" fq-name="public.&quot;StreetCoordinate&quot;.&quot;StreetCoordinate_coordinateid_fkey&quot;" type="fk" pk-ref="2" fk-ref="20"/>
+		<relation name="Region_idcountry_fkey" fq-name="public.&quot;Region&quot;.&quot;Region_idcountry_fkey&quot;" type="fk" pk-ref="3" fk-ref="16"/>
+		<relation name="IncidentCriminal_criminalid_fkey" fq-name="public.&quot;IncidentCriminal&quot;.&quot;IncidentCriminal_criminalid_fkey&quot;" type="fk" pk-ref="4" fk-ref="15"/>
+		<relation name="DangerAreaComment_dangerareaid_fkey" fq-name="public.&quot;DangerAreaComment&quot;.&quot;DangerAreaComment_dangerareaid_fkey&quot;" type="fk" pk-ref="5" fk-ref="6"/>
+		<relation name="DistrictDangerArea_dangerareaid_fkey" fq-name="public.&quot;DistrictDangerArea&quot;.&quot;DistrictDangerArea_dangerareaid_fkey&quot;" type="fk" pk-ref="5" fk-ref="10"/>
+		<relation name="DistrictComment_districtid_fkey" fq-name="public.&quot;DistrictComment&quot;.&quot;DistrictComment_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="8"/>
+		<relation name="DistrictCoordinate_districtid_fkey" fq-name="public.&quot;DistrictCoordinate&quot;.&quot;DistrictCoordinate_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="9"/>
+		<relation name="DistrictDangerArea_districtid_fkey" fq-name="public.&quot;DistrictDangerArea&quot;.&quot;DistrictDangerArea_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="10"/>
+		<relation name="DistrictIncident_districtid_fkey" fq-name="public.&quot;DistrictIncident&quot;.&quot;DistrictIncident_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="11"/>
+		<relation name="DistrictRating_districtid_fkey" fq-name="public.&quot;DistrictRating&quot;.&quot;DistrictRating_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="12"/>
+		<relation name="DistrictStreet_districtid_fkey" fq-name="public.&quot;DistrictStreet&quot;.&quot;DistrictStreet_districtid_fkey&quot;" type="fk" pk-ref="7" fk-ref="13"/>
+		<relation name="Station_iddistrict_fkey" fq-name="public.&quot;Station&quot;.&quot;Station_iddistrict_fkey&quot;" type="fk" pk-ref="7" fk-ref="17"/>
+		<relation name="DistrictIncident_incidentid_fkey" fq-name="public.&quot;DistrictIncident&quot;.&quot;DistrictIncident_incidentid_fkey&quot;" type="fk" pk-ref="14" fk-ref="11"/>
+		<relation name="IncidentCriminal_incidentid_fkey" fq-name="public.&quot;IncidentCriminal&quot;.&quot;IncidentCriminal_incidentid_fkey&quot;" type="fk" pk-ref="14" fk-ref="15"/>
+		<relation name="District_idregion_fkey" fq-name="public.&quot;District&quot;.&quot;District_idregion_fkey&quot;" type="fk" pk-ref="16" fk-ref="7"/>
+		<relation name="Station_type_fkey" fq-name="public.&quot;Station&quot;.&quot;Station_type_fkey&quot;" type="fk" pk-ref="18" fk-ref="17"/>
+		<relation name="DistrictStreet_streetid_fkey" fq-name="public.&quot;DistrictStreet&quot;.&quot;DistrictStreet_streetid_fkey&quot;" type="fk" pk-ref="19" fk-ref="13"/>
+		<relation name="StreetCoordinate_streetid_fkey" fq-name="public.&quot;StreetCoordinate&quot;.&quot;StreetCoordinate_streetid_fkey&quot;" type="fk" pk-ref="19" fk-ref="20"/>
+		<relation name="Comment_userid_fkey" fq-name="public.&quot;Comment&quot;.&quot;Comment_userid_fkey&quot;" type="fk" pk-ref="21" fk-ref="1"/>
+		<relation name="DistrictRating_userid_fkey" fq-name="public.&quot;DistrictRating&quot;.&quot;DistrictRating_userid_fkey&quot;" type="fk" pk-ref="21" fk-ref="12"/>
+	</relations>
+</diagram>
