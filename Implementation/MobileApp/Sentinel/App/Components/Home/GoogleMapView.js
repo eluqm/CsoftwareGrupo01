@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Button, Text, Image } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker } from 'react-native-maps';
 import Color from '../../Shared/Color';
@@ -8,54 +8,25 @@ import { Supabase } from '../../../lib/Supabase';
 //import Sound from 'react-native-sound';
 import { Audio } from 'expo-av'
 
-function calcularDistancia(lat1, lon1, lat2, lon2) {
-    console.log('--- ', lat1, lon1, lat2, lon2);
-    const radioTierraKm = 6371; // Radio de la Tierra en kilómetros
+function calcularDistancia(lat1,lon1,lat2,lon2)
+{
+  rad = function(x) {return x*Math.PI/180;}
+  var R = 6378.137; //Radio de la tierra en km 
+  var dLat = rad( lat2 - lat1 );
+  var dLong = rad( lon2 - lon1 );
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * 
+  Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-    // Convierte las coordenadas de grados a radianes
-    const lat1Rad = (lat1 * Math.PI) / 180;
-    const lon1Rad = (lon1 * Math.PI) / 180;
-    const lat2Rad = (lat2 * Math.PI) / 180;
-    const lon2Rad = (lon2 * Math.PI) / 180;
-
-    // Diferencia entre las longitudes y latitudes
-    const dLat = lat2Rad - lat1Rad;
-    const dLon = lon2Rad - lon1Rad;
-
-    // Fórmula de la distancia haversine
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    // Distancia en kilómetros
-    const distancia = radioTierraKm * c;
-
-    return distancia;
-}
+  //aquí obtienes la distancia en metros por la conversion 1Km =1000m
+  var d = R * c * 1000; 
+  return d ; 
+  }
 
 
 export default function GoogleMapView() {
-    //const PlayAlert = () => { };
-/*
-    useEffect(() => {
-        const playSound = async () => {
-            const soundObject = new Audio.Sound();
-            try {
-                await soundObject.loadAsync(require('./../../../assets/emergency-alarm.mp3'));
-                await soundObject.playAsync();
-                // Your sound is playing!
-            } 
-            catch (error) {
-                // An error occurred!
-            }
-        };
-        playSound();
-    }, []);
-
-*/
     const [sound, setSound] = React.useState();
+
     async function playSound() {
         const { sound } = await Audio.Sound.createAsync(require('./../../../assets/emergency-alarm.mp3'));
         setSound(sound);
@@ -71,8 +42,6 @@ export default function GoogleMapView() {
     //playSound();
 
     const coordinates = { latitude: -16.396623642472864,  longitude: -71.5079767411299 };
-    var radius = 200;
-
     const policeLocation = { latitude: -16.399494477956868,  longitude: -71.50671502706446 };
     const securityLocation = { latitude: -16.401975103977186,   longitude: -71.5063475865762 };
 
@@ -84,15 +53,6 @@ export default function GoogleMapView() {
     ];
 
     //------------------
-/*
-    var Sound = require('react-native-sound');
-
-    sound = new Sound('./../../../assets/emergency-alarm.mp3');
-
-    playSound = () => {
-        this.sound.play();
-    }
-*/
     const [mapRegion, setMapRegion] = useState([]);
     
     const [myLocation, setMyLocation] = useState([]);
@@ -100,7 +60,6 @@ export default function GoogleMapView() {
     const {location, setLocation} = useContext(UserLocationContext);
 
     useEffect(() => {
-        //playSound();
         if(location) {
             setMapRegion({
                 latitude: location.coords.latitude,
@@ -116,8 +75,8 @@ export default function GoogleMapView() {
         }
         else {
             setMyLocation({
-                latitude: -16.400025937734114,
-                longitude: -71.5065392349691,
+                latitude: -16.397591243235873,
+                longitude: -71.50415966156503,
             });
         }
     }, [location]);
@@ -136,6 +95,10 @@ export default function GoogleMapView() {
         return data;
     }
 
+    const handleCirclePress = (dangerArea) => {
+        Alert.alert('Círculo tocado', '¡Has tocado el círculo!');
+    };
+
     useEffect(() => {
         const fetchPosts = async () => {
             const { data, error } = await Supabase.from('Coordinate').select('*');
@@ -146,7 +109,9 @@ export default function GoogleMapView() {
         
         //GetCoords().then((data) => setPosts(data))
     }, []);
-var i = 0;
+    
+    var i = 0;
+    
     useEffect(() => {
         const fetchDangerAreas = async () => {
             
@@ -156,18 +121,15 @@ var i = 0;
                 setDangerAreas(data);
                 console.log('data:: ', data[i]);
                 data.map((dangerarea) => {
-                    var distance = calcularDistancia(dangerarea.latitude, dangerarea.longitude,-16.39778798960131, -71.50403175029082);
-                
-                console.log('distance: ',distance*1000 + dangerarea.radius);
+                    var distance = calcularDistancia(dangerarea.latitude, dangerarea.longitude, myLocation.latitude, myLocation.longitude);
 
-                if (distance*1000 + dangerarea.radius <= 1000) {
-                    console.log("El usuario está dentro del círculo ampliado.");
-                    playSound();
-                } 
-                else {
-                    console.log("El usuario está fuera del círculo ampliado.");
-                    //playSound();
-                }
+                    if (distance + dangerarea.radius <= 1000) {
+                        console.log("El usuario está cerca.");
+                        playSound();
+                    } 
+                    else {
+                        //console.log("El usuario no está cerca.");
+                    }
             })
                 
                 
@@ -187,6 +149,14 @@ var i = 0;
                 provider = { PROVIDER_GOOGLE } 
                 showsUserLocation = { true }
                 region = { mapRegion }
+
+                onPress={(event) => {
+                    console.log(event)
+                    /*DangerAreas.map(zone => {
+                        console.log(zone)
+                        alert(zone.id)
+                    })*/
+                }}
             >
                 <Marker title = "You" coordinate = { myLocation }>
                     <Image source = { require('./../../../assets/you_icon.png') } style = {{ height: 25, width:25 }} />
@@ -210,6 +180,7 @@ var i = 0;
                             strokeWidth = { 1 }
                             key = { dangerArea.id }
                         />
+
                     ))
                 }
 

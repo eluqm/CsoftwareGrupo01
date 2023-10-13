@@ -6,10 +6,6 @@ export default function Header() {
         <View style = {{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', gap: 10,
                 alignItems: 'center', paddingTop: 10 }}>
 
-            <Image source={require('./../../../assets/logo.png')}
-                style = { styles.logo }
-            />
-
             <View>
                 <TextInput placeholder='Search'
                     style = { styles.searchBar }
