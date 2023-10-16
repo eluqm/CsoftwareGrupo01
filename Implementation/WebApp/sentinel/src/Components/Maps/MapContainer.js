@@ -18,6 +18,7 @@ export class MapContainer extends React.Component {
         );
     }
 }
+
 /*
 export default GoogleApiWrapper({
     apiKey: ("AIzaSyA_Vpdjo0SdI-cHrISpAhnlmiSoP_tvMKg")
