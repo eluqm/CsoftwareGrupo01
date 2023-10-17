@@ -1,5 +1,12 @@
 {
   "expo": {
+    "packagerOpts": {
+      "hostType": "tunnel",
+      "lanType": "none",
+      "dev": true,
+      "minify": false,
+      "urlRandomness": "randomstring"
+    },
     "name": "Sentinel",
     "slug": "Sentinel",
     "version": "1.0.0",
