@@ -1,15 +1,12 @@
-import { StyleSheet, View, Text, Button, Image, Pressable, Dimensions } from 'react-native'
-import Color from './../Shared/Color';
+import { StyleSheet, View, Text, Alert, Image, Pressable, Dimensions } from 'react-native'
 import React, { useContext } from 'react';
+//--
+import { Supabase } from './../../lib/Supabase';
 import { useLogIn } from './../Context/LogInContext';
+import Color from './../Shared/Color';
 
+export default function Welcome({ navigation }) {
 
-export default function Profile() {
-    const { setIsLoggedIn, setProfile } = useLogIn();
-
-    const LogInForm = () => {
-        setIsLoggedIn(true);
-    };
 
     return (
         <View style = { styles.container }>
@@ -19,14 +16,18 @@ export default function Profile() {
 
             <Text style = { styles.text } >Welcome!</Text>
 
-            <Pressable onPress = { LogInForm }>
+            <Pressable 
+                onPress={() => {
+                    navigation.navigate('LogIn')
+                }}
+            >
                 {({pressed}) => (
                     <Text style = { !pressed ? styles.logIn : styles.logInPressed }> Log In </Text>
                 )}
             </Pressable>
         
             <Pressable onPress={() => {
-                console.log('2')
+                navigation.navigate('SignUp')
             }}>
                 {({pressed}) => (
                     <Text style = { !pressed ? styles.signUp : styles.signUpPressed }> Sign Up </Text>

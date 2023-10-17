@@ -10,12 +10,14 @@ import LogInProvider from './App/Context/LogInContext';
 export default function App() {
 
   return (
+    <View style = {styles.container}>
+      <StatusBar style='auto' />
       <LogInProvider>
         <NavigationContainer>
           <MainNavigator />
         </NavigationContainer>
       </LogInProvider>
-    
+    </View>
   );
 }
 

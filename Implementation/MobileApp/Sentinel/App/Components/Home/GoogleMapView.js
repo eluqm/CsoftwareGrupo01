@@ -1,4 +1,4 @@
-import { StyleSheet, View, Button, Text, Image } from 'react-native'
+import { StyleSheet, View, Alert, Text, Image } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker } from 'react-native-maps';
 import Color from '../../Shared/Color';
@@ -8,7 +8,7 @@ import { Supabase } from '../../../lib/Supabase';
 //import Sound from 'react-native-sound';
 import { Audio } from 'expo-av'
 
-function calcularDistancia(lat1,lon1,lat2,lon2)
+function GetDistance(lat1,lon1,lat2,lon2)
 {
   rad = function(x) {return x*Math.PI/180;}
   var R = 6378.137; //Radio de la tierra en km 
@@ -21,17 +21,12 @@ function calcularDistancia(lat1,lon1,lat2,lon2)
   //aquí obtienes la distancia en metros por la conversion 1Km =1000m
   var d = R * c * 1000; 
   return d ; 
-  }
+}
+
 
 
 export default function GoogleMapView() {
     const [sound, setSound] = React.useState();
-
-    async function playSound() {
-        const { sound } = await Audio.Sound.createAsync(require('./../../../assets/emergency-alarm.mp3'));
-        setSound(sound);
-        await sound.playAsync();
-    }
 
     React.useEffect(() => {
         return sound? () => {
@@ -39,7 +34,11 @@ export default function GoogleMapView() {
         } : undefined;
     }, [sound]);
 
-    //playSound();
+    async function playSound() {
+        const { sound } = await Audio.Sound.createAsync(require('./../../../assets/emergency-alarm.mp3'));
+        setSound(sound);
+        await sound.playAsync();
+    }
 
     const coordinates = { latitude: -16.396623642472864,  longitude: -71.5079767411299 };
     const policeLocation = { latitude: -16.399494477956868,  longitude: -71.50671502706446 };
@@ -57,9 +56,12 @@ export default function GoogleMapView() {
     
     const [myLocation, setMyLocation] = useState([]);
     
-    const {location, setLocation} = useContext(UserLocationContext);
+    //const {location, setLocation} = useContext(UserLocationContext);
+    const { location, setLocation, onChangeLocation } = useContext(UserLocationContext);
+
 
     useEffect(() => {
+        console.log('asdasdasdasdasda');
         if(location) {
             setMapRegion({
                 latitude: location.coords.latitude,
@@ -75,11 +77,11 @@ export default function GoogleMapView() {
         }
         else {
             setMyLocation({
-                latitude: -16.397591243235873,
-                longitude: -71.50415966156503,
+                latitude: 0.0,
+                longitude: 0.0,
             });
         }
-    }, [location]);
+    }, []);
 
     //SUPABASE
     
@@ -87,16 +89,8 @@ export default function GoogleMapView() {
 
     const [ DangerAreas, setDangerAreas ] = useState([]);
 
-    const GetCoords = async () => {
-        let { data, error } = await Supabase
-        .from('Coordinate')
-        .select('latitude, longitude')
-
-        return data;
-    }
-
     const handleCirclePress = (dangerArea) => {
-        Alert.alert('Círculo tocado', '¡Has tocado el círculo!');
+        Alert.alert('Info');
     };
 
     useEffect(() => {
@@ -105,9 +99,8 @@ export default function GoogleMapView() {
             if(error) console.log(error);
             else setPosts(data);
         };
-        fetchPosts();
         
-        //GetCoords().then((data) => setPosts(data))
+        fetchPosts();
     }, []);
     
     var i = 0;
@@ -119,28 +112,33 @@ export default function GoogleMapView() {
             if(error) console.log(error);
             else {
                 setDangerAreas(data);
-                console.log('data:: ', data[i]);
-                data.map((dangerarea) => {
-                    var distance = calcularDistancia(dangerarea.latitude, dangerarea.longitude, myLocation.latitude, myLocation.longitude);
+                console.log('getting data...');
+                
+                Alert.alert('You are near a dangerous area');
+                await playSound();
 
-                    if (distance + dangerarea.radius <= 1000) {
-                        console.log("El usuario está cerca.");
-                        playSound();
-                    } 
-                    else {
-                        //console.log("El usuario no está cerca.");
+                data.map( async (dangerArea) => {
+                    console.log('getting distance...');
+                    var distance = GetDistance(dangerArea.latitude, dangerArea.longitude, myLocation.latitude, myLocation.longitude);
+                    console.log('distance:', distance);
+                    const minDistance = 1000;
+                    if (distance + dangerArea.radius <= minDistance) {
+                        if (i == 0) {
+                            console.log('alert...');
+                            Alert.alert('You are near a dangerous area');
+                            i++;
+                            await playSound();
+                        }
+                        
+                        
                     }
-            })
-                
-                
+                })
             }
         };
-        //playSound();
+
         fetchDangerAreas();
         
     }, []);
-    
-    //console.log(posts);
 
     return (
         <View>
@@ -204,6 +202,7 @@ export default function GoogleMapView() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Color.appColor,
     },
     map: {
         width: '100%',
