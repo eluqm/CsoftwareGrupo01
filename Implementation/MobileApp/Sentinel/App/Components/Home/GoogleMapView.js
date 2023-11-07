@@ -1,6 +1,6 @@
 import { StyleSheet, View, Alert, Text, Image } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker, Polygon } from 'react-native-maps';
 import Color from '../../Shared/Color';
 import { UserLocationContext } from '../../Context/UserLocationContext';
 import "react-native-url-polyfill/auto"
@@ -8,24 +8,32 @@ import { Supabase } from '../../../lib/Supabase';
 //import Sound from 'react-native-sound';
 import { Audio } from 'expo-av'
 
-function GetDistance(lat1,lon1,lat2,lon2)
-{
-  rad = function(x) {return x*Math.PI/180;}
-  var R = 6378.137; //Radio de la tierra en km 
-  var dLat = rad( lat2 - lat1 );
-  var dLong = rad( lon2 - lon1 );
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * 
-  Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  //aquí obtienes la distancia en metros por la conversion 1Km =1000m
-  var d = R * c * 1000; 
-  return d ; 
+function GetDistance(lat1, lon1, lat2, lon2, unit) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit=="K") { dist = dist * 1.609344 }
+		if (unit=="N") { dist = dist * 0.8684 }
+		return dist;
+	}
 }
 
 
 
 export default function GoogleMapView() {
+
     const [sound, setSound] = React.useState();
 
     React.useEffect(() => {
@@ -53,27 +61,39 @@ export default function GoogleMapView() {
 
     //------------------
     const [mapRegion, setMapRegion] = useState([]);
-    
+
+    const [isLocated, setIsLocated] = useState(false);
+    //setIsLocated(false);
+
     const [myLocation, setMyLocation] = useState([]);
     
     //const {location, setLocation} = useContext(UserLocationContext);
     const { location, setLocation, onChangeLocation } = useContext(UserLocationContext);
 
-
+    //console.log('-----------',isLocated);
     useEffect(() => {
         console.log('asdasdasdasdasda');
         if(location) {
-            setMapRegion({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005
-            });
+            if (!isLocated) {
+                setMapRegion({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005
+                });
+                
+                setIsLocated(true);
+                console.log('insideee');
+            }
+            
 
             setMyLocation({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
+
+            //console.log(location.coords);
+            
         }
         else {
             setMyLocation({
@@ -81,7 +101,7 @@ export default function GoogleMapView() {
                 longitude: 0.0,
             });
         }
-    }, []);
+    }, [location] );
 
     //SUPABASE
     
@@ -95,9 +115,48 @@ export default function GoogleMapView() {
 
     useEffect(() => {
         const fetchPosts = async () => {
-            const { data, error } = await Supabase.from('Coordinate').select('*');
+            //const { data, error } = await Supabase.from('"District" AS D').select('c.* where dc.id = 1 inner join Coordinate c =');
+            /*const { data, error } =  await Supabase.rpc('GetCoordinatesForDistrict', { 'DistrictId ' : 1,});
             if(error) console.log(error);
-            else setPosts(data);
+            else { 
+                setPosts(data);
+                console.log('---------------------');
+                console.log(data);
+                console.log('---------------------');
+            }*/
+
+            setPosts([
+                {key: 1,
+                    coordinates : 
+                [
+                    { latitude: -16.477777336020456, longitude: -71.56352669968426 },
+                    { latitude: -16.45559602752613, longitude: -71.59712863768353 },
+                    { latitude: -16.431414341873168, longitude: -71.56468055948247 },
+                    { latitude: -16.449883308728673, longitude: -71.53973999709241 },
+                ]
+            },
+            {key: 2,
+                coordinates : 
+                [
+                    { latitude: -16.45559602752613, longitude: -71.59712863768353 },
+                    { latitude: -16.443505184695, longitude: -71.58090459858 },
+                    { latitude: -16.424261404310265, longitude: -71.60043335117714 },
+                    { latitude: -16.44321309840359, longitude: -71.61646033969612 },
+                ],
+        },
+        {key: 3,
+            coordinates : 
+            [
+                { latitude: -16.431414341873168, longitude: -71.56468055948247 },
+                { latitude: -16.443505184695, longitude: -71.58090459858 },
+                { latitude: -16.424261404310265, longitude: -71.60043335117714 },
+                { latitude: -16.406812640685935, longitude: -71.59733986425178 },
+            ]
+    },
+
+                
+                
+            ])
         };
         
         fetchPosts();
@@ -188,12 +247,20 @@ export default function GoogleMapView() {
                     strokeWidth = { 5 }
                 />
 
-                <Polyline
-                    coordinates = { posts }
+                {
+                    posts.map((dangerArea) => (
+                        <Polygon 
+                    coordinates = { dangerArea.coordinates }
                     strokeColor = "#FF5500"
                     strokeWidth = { 3 } 
-                    lineDashPattern = { [0,0] }
+                    lineDashPhase = { 1 }
+                    key={dangerArea.key}
                 />
+
+                    ))
+                }
+
+            
             </MapView>
         </View>
     )

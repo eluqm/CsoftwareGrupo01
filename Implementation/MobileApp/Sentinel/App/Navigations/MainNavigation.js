@@ -31,7 +31,7 @@ const MainNavigator = () => {
                     }, 
                     position => {
                         setLocation(position);
-                        console.log('=> ', position.coords);
+                        //console.log('=> ', position.coords, '\n');
                     }
                 );
             
