@@ -29,5 +29,13 @@ namespace Sentinel.Controllers
             })
             .ToArray();
         }
+
+        /*[HttpGet(Name = "GetDistance")]
+        public Task<double> GetDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
+            var location1 = new Geolocation.Coordinate(latitude1, longitude1);
+            var location2 = new Geolocation.Coordinate(latitude2, longitude2);
+
+            return Geolocation.GeoCalculator.GetDistance(location1, location2);
+        }*/
     }
 }

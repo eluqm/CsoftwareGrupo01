@@ -45,3 +45,4 @@ E:\universidad\semester7\SoftwareConstruction\Sentinel\Implementation\WebService
 E:\universidad\semester7\SoftwareConstruction\Sentinel\Implementation\WebService\Sentinel\bin\Debug\net7.0\System.Reactive.dll
 E:\universidad\semester7\SoftwareConstruction\Sentinel\Implementation\WebService\Sentinel\bin\Debug\net7.0\Websocket.Client.dll
 E:\universidad\semester7\SoftwareConstruction\Sentinel\Implementation\WebService\Sentinel\bin\Debug\net7.0\Npgsql.dll
+E:\universidad\semester7\SoftwareConstruction\Sentinel\Implementation\WebService\Sentinel\bin\Debug\net7.0\GeolocationNetStandard.dll

@@ -93,5 +93,104 @@ insert into "DangerArea" values (nextval('SeqDangerArea'), 100, -16.408660388110
 insert into "DangerArea" values (nextval('SeqDangerArea'), 200, -16.399971998749955, -71.49661907032058);
 
 --------------------------------
+--------------------------------
+--------------------------------
+-------------------------------
+--------------------------------
 
 
+insert into "District" values (nextval('SeqDistrict'), 'Tiabaya', -16.43596743548179, -71.60504253012535, 0.0, 1);
+insert into "District" values (nextval('SeqDistrict'), 'Sachaca', -16.4157558, -71.581849945651, 0.0, 1);
+insert into "District" values (nextval('SeqDistrict'), 'Jacobo Hunter', -16.44942436585364, -71.55286406075327, 0.0, 1);
+insert into "District" values (nextval('SeqDistrict'), 'Arequipa', -16.40904724373889, -71.5374492485844, 0.0, 1);
+select * from "District";
+
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.477777336020456, -71.56352669968426);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.45559602752613, -71.59712863768353);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.431414341873168, -71.56468055948247);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.449883308728673, -71.53973999709241);
+
+--insert into "Coordinate" values (nextval('SeqCoordinate'), -16.45559602752613, -71.59712863768353);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.443505184695, -71.58090459858);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.424261404310265, -71.60043335117714);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.44321309840359, -71.61646033969612);
+
+--insert into "Coordinate" values (nextval('SeqCoordinate'), -16.431414341873168, -71.56468055948247);
+--insert into "Coordinate" values (nextval('SeqCoordinate'), -16.443505184695, -71.58090459858);
+--insert into "Coordinate" values (nextval('SeqCoordinate'), -16.424261404310265, -71.60043335117714);
+insert into "Coordinate" values (nextval('SeqCoordinate'), -16.406812640685935, -71.59733986425178);
+select * from "Coordinate";
+
+
+insert into "DistrictCoordinate" values (4, 36);
+insert into "DistrictCoordinate" values (4, 37);
+insert into "DistrictCoordinate" values (4, 38);
+insert into "DistrictCoordinate" values (4, 39);
+
+insert into "DistrictCoordinate" values (2, 37);
+insert into "DistrictCoordinate" values (2, 40);
+insert into "DistrictCoordinate" values (2, 41);
+insert into "DistrictCoordinate" values (2, 42);
+
+insert into "DistrictCoordinate" values (3, 38);
+insert into "DistrictCoordinate" values (3, 40);
+insert into "DistrictCoordinate" values (3, 41);
+insert into "DistrictCoordinate" values (3, 43);
+
+select * from "DistrictCoordinate";
+
+
+insert into "DistrictFrontier" values (4, 2);
+insert into "DistrictFrontier" values (4, 3);
+insert into "DistrictFrontier" values (4, 5);
+
+
+--------------------------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+select * from "District";
+select * from "DistrictCoordinate";
+select * from "DistrictFrontier";
+
+
+CREATE OR REPLACE FUNCTION GetDistricstFrontier(
+    in out d_id "District".id%type,
+    out d_name "District".name%type,
+    out d_rating "District".rating%type
+)
+returns setof record as 
+$$
+	declare
+        cur cursor (d_id "District".id%type) for (
+            select d.id, d.name, d.rating
+            from "District" d
+            join "DistrictFrontier" df on df.DistrictFrontierId = d.id
+            where df.districtid = d_id
+        );
+        rec record;
+    begin
+        open cur(d_id);
+        loop
+            fetch cur into rec;
+            exit when not found;
+
+            d_id := rec.id;
+            d_name := rec.name;
+            d_rating := rec.rating;
+
+            return next;
+        end loop;
+        close cur;
+        return;
+    exception
+        when others then
+            raise notice 'ERROR: %', SQLERRM;
+            return;
+    end 
+$$ 
+language 'plpgsql';
+
+
+select * from GetDistricstFrontier(4);
+
+  

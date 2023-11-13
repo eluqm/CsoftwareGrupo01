@@ -131,3 +131,9 @@ CREATE TABLE "DangerAreaComment" (
 	CommentId int NOT NULL REFERENCES "Comment",
 	PRIMARY KEY (DangerAreaId, CommentId)
 );
+
+CREATE TABLE "DistrictFrontier" (
+	DistrictId int NOT NULL REFERENCES "District",
+	DistrictFrontierId int NOT NULL REFERENCES "District",
+	PRIMARY KEY (DistrictId, DistrictFrontierId)
+);
