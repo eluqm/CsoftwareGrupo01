@@ -1,8 +1,10 @@
 import { StyleSheet, View, Text, Image, TextInput, Dimensions } from 'react-native'
 import React from 'react'
 import Color from '../../Shared/Color';
+import { useLogIn } from './../../Context/LogInContext';
 
 export default function Header() {
+    const { profile } = useLogIn();
     return (
         <View style = {{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', gap: 10,
                 alignItems: 'center', paddingVertical: 10, backgroundColor: Color.appColor }}>
@@ -13,7 +15,8 @@ export default function Header() {
                 />
             </View>
 
-            <Image source={require('./../../../assets/favicon.png')}
+            <Image 
+                source = {{ uri: profile.UrlImage }}
                 style = { styles.userImage }
             />
 

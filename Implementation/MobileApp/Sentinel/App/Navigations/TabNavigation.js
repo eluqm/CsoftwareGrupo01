@@ -32,7 +32,7 @@ export default function TabNavigation() {
                 options = {{
                     tabBarLabel: 'Criminals',
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="person-search" size={24} color="black" />
+                        <MaterialIcons name = "person-search" size = { 24 } color = "black" />
                     ),
                 }}
             />
@@ -42,7 +42,7 @@ export default function TabNavigation() {
                 options = {{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color, size }) => (
-                        <FontAwesome name="user" size={24} color="black" />
+                        <FontAwesome name = "user" size = { 24 } color = "black" />
                     ),
                 }}
             />

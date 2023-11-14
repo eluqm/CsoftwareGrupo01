@@ -41,7 +41,7 @@ export default function List() {
             <FlatList
                 data = { DATA }
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
+                renderItem = {({ item }) => (
                     <View style = { styles.container }>
                         <Image source={{ uri: item.url }} style={{ width: 100, height: 100 }} />
                         <View style={styles.item}>

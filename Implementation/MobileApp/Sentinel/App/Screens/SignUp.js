@@ -5,9 +5,36 @@ import Color from './../Shared/Color';
 import { Supabase } from './../../lib/Supabase';
 
 export default function SignUp({ navigation }) {
+    //const { setIsLoggedIn, setProfile } = useLogIn();
+    const [userName, onChangeUserName] = React.useState('MyName');
+    const [email, onChangeEmail] = React.useState('karlonaix@gmail.com');
+    const [password, onChangePassword] = React.useState('123456789');
+    const [repeatedPassword, onChangeRepeatedPassword] = React.useState('123456789');
 
     const SignUpSupabase = async () => {
-        console.log('---------');
+        //navigation.navigate('GettingStarted');
+        
+        if (password != repeatedPassword) {
+            Alert.alert('Passwords do not match')
+            return;
+        }
+
+        const { data, error } = await Supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    userName: userName,
+                    urlImage: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg',
+                }
+            }
+        })
+        if (error) {
+            Alert.alert(error.message)
+        }
+        else {
+            navigation.navigate('GettingStarted');
+        }
     };
 
     return (
@@ -24,6 +51,8 @@ export default function SignUp({ navigation }) {
                 cursorColor = { Color.black }
                 style = { styles.userName }
                 autoCorrect = { true }
+                value = { userName }
+                onChangeText = { onChangeUserName }
             />
 
             <TextInput 
@@ -31,6 +60,8 @@ export default function SignUp({ navigation }) {
                 placeholderTextColor = { Color.gray2 }
                 cursorColor = { Color.black }
                 style = { styles.userName }
+                value = { email }
+                onChangeText = { onChangeEmail }
             />
 
             <TextInput 
@@ -39,6 +70,8 @@ export default function SignUp({ navigation }) {
                 cursorColor = { Color.black }
                 style = { styles.userName }
                 secureTextEntry = { true }
+                value = { password }
+                onChangeText = { onChangePassword }
             />
 
             <TextInput 
@@ -47,6 +80,8 @@ export default function SignUp({ navigation }) {
                 cursorColor = { Color.black }
                 style = { styles.userName }
                 secureTextEntry = { true }
+                value = { repeatedPassword }
+                onChangeText = { onChangeRepeatedPassword }
             />
         
             <Pressable onPress = { SignUpSupabase }>

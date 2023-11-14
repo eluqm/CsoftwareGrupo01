@@ -6,6 +6,7 @@ import { useLogIn } from './../Context/LogInContext';
 
 export default function Profile() {
     const { setIsLoggedIn, setProfile } = useLogIn();
+    const { profile } = useLogIn();
 
     const LogInForm = () => {
         setIsLoggedIn(false);
@@ -13,13 +14,14 @@ export default function Profile() {
 
     return (
         <View style = { styles.container }>
-            <Image source = {require('./../../assets/favicon.png')}
+            <Image 
+                source = {{ uri: profile.UrlImage }}
                 style = { styles.userImage }
             />
 
-            <Text style = { styles.userName } >DAOBLUR</Text>
+            <Text style = { styles.userName } >{ profile.UserName }</Text>
             
-            <Text style = { styles.email } >kpachac@ulasalle.edu.pe</Text>
+            <Text style = { styles.email } >{ profile.Email }</Text>
 
             <Pressable onPress = { LogInForm }>
                 {({pressed}) => (
@@ -38,8 +40,9 @@ const styles = StyleSheet.create({
         backgroundColor: Color.white,
     },
     userImage: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
+        borderRadius: 100
     },
     userName: {
         color: Color.black,

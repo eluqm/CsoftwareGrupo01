@@ -4,24 +4,32 @@ import React, { useContext } from 'react';
 import Color from './../Shared/Color';
 import { useLogIn } from './../Context/LogInContext';
 import { Supabase } from './../../lib/Supabase';
+import User from './../Models/User'
 
 export default function LogIn({ navigation }) {
     const { setIsLoggedIn, setProfile } = useLogIn();
-    const [email, onChangeEmail] = React.useState('kpachac@ulasalle.edu.pe');
+    const [email, onChangeEmail] = React.useState('karloviper@gmail.com');
     const [password, onChangePassword] = React.useState('123456789');
 
     const LogInSupabase = async () => {
-            const { error } = await Supabase.auth.signInWithPassword({
+            const { data, error } = await Supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
             })
         
             if (error) {
-                Alert.alert(error.message)
+                Alert.alert(error.message);
                 setIsLoggedIn(false);
+                
             }
             else {
+                setProfile({
+                    Email: data.user.email,
+                    UserName: data.user.user_metadata.userName,
+                    UrlImage: data.user.user_metadata.urlImage
+            });
                 setIsLoggedIn(true);
+                
             }
         };
 

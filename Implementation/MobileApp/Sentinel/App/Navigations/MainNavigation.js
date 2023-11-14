@@ -9,6 +9,7 @@ import { UserLocationContext } from './../Context/UserLocationContext';
 //--
 import LogIn from './../Screens/LogIn';
 import SignUp from './../Screens/SignUp';
+import GettingStarted from './../Screens/GettingStarted';
 import Welcome from './../Screens/Welcome';
 import TabNavigation from './TabNavigation';
 
@@ -50,7 +51,6 @@ const MainNavigator = () => {
         </UserLocationContext.Provider>
     )
     : 
-
     (
         <Stack.Navigator initialRouteName = "Welcome">
             <Stack.Screen 
@@ -60,6 +60,7 @@ const MainNavigator = () => {
             />
             <Stack.Screen name = "LogIn" component = { LogIn } />
             <Stack.Screen name = "SignUp" component = { SignUp } />
+            <Stack.Screen name = "GettingStarted" component = { GettingStarted } />
         </Stack.Navigator>
     );
 };

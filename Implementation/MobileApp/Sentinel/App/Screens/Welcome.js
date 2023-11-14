@@ -1,13 +1,9 @@
 import { StyleSheet, View, Text, Alert, Image, Pressable, Dimensions } from 'react-native'
 import React, { useContext } from 'react';
 //--
-import { Supabase } from './../../lib/Supabase';
-import { useLogIn } from './../Context/LogInContext';
 import Color from './../Shared/Color';
 
 export default function Welcome({ navigation }) {
-
-
     return (
         <View style = { styles.container }>
             <Image source = {require('./../../assets/logo.png')}
