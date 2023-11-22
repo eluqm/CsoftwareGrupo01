@@ -5,9 +5,15 @@ import Color from './../Shared/Color';
 import { useLogIn } from './../Context/LogInContext';
 import { Supabase } from './../../lib/Supabase';
 import User from './../Models/User'
+import { Entypo } from '@expo/vector-icons'; 
 
 export default function LogIn({ navigation }) {
     const { setIsLoggedIn, setProfile } = useLogIn();
+    const [ showPassword, setShowPassword ] = React.useState(false);
+/*
+    const [email, onChangeEmail] = React.useState('');
+    const [password, onChangePassword] = React.useState('');
+*/
     const [email, onChangeEmail] = React.useState('karloviper@gmail.com');
     const [password, onChangePassword] = React.useState('123456789');
 
@@ -29,7 +35,6 @@ export default function LogIn({ navigation }) {
                     UrlImage: data.user.user_metadata.urlImage
             });
                 setIsLoggedIn(true);
-                
             }
         };
 
@@ -40,7 +45,7 @@ export default function LogIn({ navigation }) {
             />
 
             <Text style = { styles.text } >Log In</Text>
-
+            
             <TextInput 
                 placeholder = 'Email' 
                 placeholderTextColor = { Color.gray2 }
@@ -50,16 +55,31 @@ export default function LogIn({ navigation }) {
                 onChangeText = { onChangeEmail }
             />
 
-            <TextInput 
-                placeholder = 'Password' 
-                placeholderTextColor = { Color.gray2 }
-                cursorColor = { Color.black }
-                style = { styles.userName }
-                secureTextEntry = { true }
-                value = { password }
-                onChangeText = { onChangePassword }
-            />
-        
+            <View style = {{ flexDirection: 'colum' }}>
+                <TextInput 
+                    placeholder = 'Password' 
+                    placeholderTextColor = { Color.gray2 }
+                    cursorColor = { Color.black }
+                    style = { styles.userName }
+                    secureTextEntry = { !showPassword }
+                    value = { password }
+                    onChangeText = { onChangePassword }
+                />
+
+                <Pressable 
+                    style = {{ position: 'absolute', alignSelf: 'flex-end', top: 25, right: 20 }}
+                    onPress = { () => { showPassword ? setShowPassword(false) : setShowPassword(true) } }
+                >
+                    {({pressed}) => (
+                        <Entypo
+                            name = { showPassword ? "eye-with-line" : "eye" } 
+                            size = { 25 }
+                            color = "black"
+                        />
+                    )}
+                </Pressable>
+            </View>
+            
             <Pressable 
                 onPress = { LogInSupabase }
             >

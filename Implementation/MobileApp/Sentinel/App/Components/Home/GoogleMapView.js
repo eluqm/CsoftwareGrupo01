@@ -1,9 +1,11 @@
-import { StyleSheet, View, Alert, Text, Image, Animated } from 'react-native'
+import { StyleSheet, View, Alert, Text, Image, TextInput, Dimensions, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import MapView, { PROVIDER_GOOGLE, Circle, Polyline, Marker, Polygon } from 'react-native-maps';
 import "react-native-url-polyfill/auto"
+import { getDistance } from 'geolib';
 //-------------------- EXTERNAL
 import { Audio } from 'expo-av'
+import { Ionicons } from '@expo/vector-icons'; 
 
 //-------------------- INTERNAL
 //import { useLogIn } from './../Context/LogInContext';
@@ -11,29 +13,6 @@ import { Supabase } from '../../../lib/Supabase';
 import { UserLocationContext } from '../../Context/UserLocationContext';
 import Color from '../../Shared/Color';
 import { useLogIn } from './../../Context/LogInContext';
-
-function GetDistance(lat1, lon1, lat2, lon2, unit) {
-	if ((lat1 == lat2) && (lon1 == lon2)) {
-		return 0;
-	}
-	else {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180;
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
-		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-		if (dist > 1) {
-			dist = 1;
-		}
-		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
-		dist = dist * 60 * 1.1515;
-		if (unit=="K") { dist = dist * 1.609344 }
-		if (unit=="N") { dist = dist * 0.8684 }
-		return dist;
-	}
-}
-
 
 
 export default function GoogleMapView() {    
@@ -65,7 +44,8 @@ export default function GoogleMapView() {
     */
 
     const { profile } = useLogIn();
-    const [sound, setSound] = React.useState();
+    const [ sound, setSound ] = React.useState();
+    const [ showAlert, setShowAlert ] = React.useState(true);
 
     React.useEffect(() => {
         return sound? () => {
@@ -102,13 +82,27 @@ export default function GoogleMapView() {
     //setIsLocated(false);
 
     const [myLocation, setMyLocation] = useState([]);
-    
+
+    const [areasSaved, setAreasSaved] = useState([]);
+    const [count, setCount] = useState(5);
+    const [count2, setCount2] = useState(1);
+    //const [mapRegion, setMapRegion] = useState([]);
+
     //const {location, setLocation} = useContext(UserLocationContext);
     const { location, setLocation, onChangeLocation } = useContext(UserLocationContext);
+const [searchBarValue, onChangeSearchBarValue] = React.useState(200);
 
     //console.log('-----------',isLocated);
     useEffect(() => {
-        console.log('asdasdasdasdasda');
+        const distance = getDistance(
+            { latitude: -16.398948781819854, longitude: -71.50674451504122 },
+            { latitude: -16.399544056318696, longitude: -71.5065540913241 }
+          );
+        //  -16., -71.
+          console.log(distance);
+
+        console.log('asdasdasdasdasda', distance);
+
         if(location) {
             if (!isLocated) {
                 setMapRegion({
@@ -128,8 +122,27 @@ export default function GoogleMapView() {
                 longitude: location.coords.longitude,
             });
 
-            //console.log(location.coords);
+            if(count2 == 1) {
+                var i = 0;
+                DangerAreas.map( async (dangerArea) => {
+                    
+                    const  distance = getDistance( { latitude: dangerArea.latitude, longitude: dangerArea.longitude} ,  { latitude: myLocation.latitude, longitude: myLocation.longitude });
+                    console.log('distance:', distance);
+                    const minDistance = searchBarValue;
+                    if (distance - dangerArea.radius <= minDistance) {
+                        if (i == 0) {
+                            if(showAlert) Alert.alert(`You are near a dangerous area ${distance-dangerArea.radius} m`);
+                            i++;
+                            await playSound();
+                        }
+                    }
+                })
+            }
+            setCount2(count2 + 1);
+            console.log('getting distance..', count2);
+            if(count <= count2) setCount2(1);
             
+            //console.log(location.coords);
         }
         else {
             setMyLocation({
@@ -328,27 +341,6 @@ export default function GoogleMapView() {
             if(error) console.log(error);
             else {
                 setDangerAreas(data);
-                console.log('getting data...');
-                
-                Alert.alert('You are near a dangerous area');
-                await playSound();
-
-                data.map( async (dangerArea) => {
-                    console.log('getting distance...');
-                    var distance = GetDistance(dangerArea.latitude, dangerArea.longitude, myLocation.latitude, myLocation.longitude);
-                    console.log('distance:', distance);
-                    const minDistance = 1000;
-                    if (distance + dangerArea.radius <= minDistance) {
-                        if (i == 0) {
-                            console.log('alert...');
-                            Alert.alert('You are near a dangerous area');
-                            i++;
-                            await playSound();
-                        }
-                        
-                        
-                    }
-                })
             }
         };
 
@@ -395,15 +387,25 @@ export default function GoogleMapView() {
 
                 {
                     DangerAreas.map((dangerArea) => (
-                        <Circle
+                        <View key = { dangerArea.id }>
+                            <Circle
                             center = {{ latitude: dangerArea.latitude, longitude: dangerArea.longitude }}
                             radius = { dangerArea.radius }
                             strokeColor = { Color.red }
                             fillColor = "rgba(255, 0, 0, 0.25)"
                             strokeWidth = { 1 }
-                            key = { dangerArea.id }
                         />
 
+                        <Marker 
+                            title = { `Danger Area - ${dangerArea.id}` }
+                            coordinate = {{ latitude: dangerArea.latitude, longitude: dangerArea.longitude }}>
+                            <Image 
+                                source = { require('./../../../assets/danger-area-icon.png') }
+                                style = {{ height: 25, width:25 }}
+                            />
+                        </Marker>
+                        </View>
+                        
                     ))
                 }
 
@@ -431,14 +433,98 @@ export default function GoogleMapView() {
 
                     ))
                 }
-
             
             </MapView>
+
+            <View style = { styles.container2 }>
+                <View style = {{ width: Dimensions.get('screen').width * 0.9 }}>
+                    
+                </View>
+                <Pressable 
+                    style = {{ alignSelf: 'flex-end', top: 50, left: 10 }}
+                    onPress = { () => { showAlert ? setShowAlert(false) : setShowAlert(true) } }
+                >
+                    {({pressed}) => (
+                        <Ionicons
+                            style = { showAlert ? styles.location2 : styles.location}
+                            name = { "alert-circle" } 
+                            color = "black"
+                        />
+                        
+                    )}
+                </Pressable>
+            </View>
+
+            <View style = { styles.container2 }>
+                <TextInput
+                    keyboardType={'numeric'}
+                    placeholder = 'Distance' 
+                    style = { styles.searchBar }
+                    value = { `${searchBarValue}` }
+                    onChangeText = { (text) => onChangeSearchBarValue(Number(text)) }
+                    cursorColor = { Color.black }
+                    onTouchStart = { () => { //setSearchBarTouch(true); 
+                    } }
+                />
+                <TextInput
+                    keyboardType={'numeric'}
+                    placeholder = 'Time' 
+                    style = { styles.searchBar }
+                    value = { `${count}` }
+                    onChangeText = { (text) => setCount(Number(text)) }
+                    cursorColor = { Color.black }
+                    onTouchStart = { () => { //setSearchBarTouch(true); 
+                    } }
+                />
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    location: {
+        backgroundColor: Color.white,
+        borderWidth: 1,
+        width: 40,
+        height: 40,
+        paddingVertical: 5,
+        color: '#000',
+        fontSize: 25,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        alignSelf: 'center',
+      },
+      location2: {
+        backgroundColor: Color.black,
+        borderWidth: 1,
+        width: 40,
+        height: 40,
+        paddingVertical: 5,
+        color: '#FF0',
+        fontSize: 25,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        alignSelf: 'center',
+      },
+    container2: {
+        position: 'absolute',
+        marginTop: 20,
+        marginLeft: Dimensions.get('screen').width * 0.05,
+        flexDirection: 'column',
+        maxHeight: Dimensions.get('screen').height * 0.4,
+    },
+
+      searchBar: {
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 50,
+        width: Dimensions.get('screen').width * 0.5,
+        height: 40,
+        backgroundColor: Color.white,
+        paddingHorizontal: 20,
+        top: -10,
+      },
+
     container: {
         flex: 1,
         backgroundColor: Color.appColor,

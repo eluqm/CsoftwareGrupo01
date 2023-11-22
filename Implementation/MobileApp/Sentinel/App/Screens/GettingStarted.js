@@ -7,7 +7,7 @@ import Color from '../Shared/Color';
 import { Supabase } from '../../lib/Supabase';
 
 export default function GettingStarted({ navigation }) {
-    
+
     const [index, setIndex] = React.useState(0);
 
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -35,7 +35,7 @@ export default function GettingStarted({ navigation }) {
         },
         {
             Id : 3,
-            Text: 'These Lines represent streets: Red if it is dangerous, Yellow if it is moderately dangerous, and green if it is a safe street.',
+            Text: 'These Lines represent streets: Red if it is dangerous, Yellow if it is moderately dangerous, and Green if it is a safe street.',
             Image: require('./../../assets/t-streets.png'),
             Icon: ( <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                         <Entypo name="flow-line" size={30} color="red" />
@@ -72,7 +72,8 @@ export default function GettingStarted({ navigation }) {
                                 },
                             },
                         },
-                    ])}
+                    ]
+                    , {useNativeDriver:false})}
                     scrollEventThrottle = { 1 }
                     
                     onMomentumScrollEnd = { (event ) => {

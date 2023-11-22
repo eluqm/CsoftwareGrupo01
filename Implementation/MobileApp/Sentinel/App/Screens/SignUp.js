@@ -6,13 +6,27 @@ import { Supabase } from './../../lib/Supabase';
 
 export default function SignUp({ navigation }) {
     //const { setIsLoggedIn, setProfile } = useLogIn();
+    
+    const [userName, onChangeUserName] = React.useState('');
+    const [email, onChangeEmail] = React.useState('');
+    const [password, onChangePassword] = React.useState('');
+    const [repeatedPassword, onChangeRepeatedPassword] = React.useState('');
+    
+    /*
     const [userName, onChangeUserName] = React.useState('MyName');
-    const [email, onChangeEmail] = React.useState('karlonaix@gmail.com');
+    const [email, onChangeEmail] = React.useState('billgathes@testing.com');
     const [password, onChangePassword] = React.useState('123456789');
     const [repeatedPassword, onChangeRepeatedPassword] = React.useState('123456789');
+    const [showPassword, setShowPassword] = React.useState('');
+    */
 
     const SignUpSupabase = async () => {
-        //navigation.navigate('GettingStarted');
+        /*
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'GettingStarted' }],
+        });
+        */
         
         if (password != repeatedPassword) {
             Alert.alert('Passwords do not match')
@@ -33,7 +47,11 @@ export default function SignUp({ navigation }) {
             Alert.alert(error.message)
         }
         else {
-            navigation.navigate('GettingStarted');
+            Alert.alert("An email with a verification link has been sent to your email, press it to log in");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'GettingStarted' }],
+            });
         }
     };
 
